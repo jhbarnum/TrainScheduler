@@ -1,6 +1,4 @@
 
-
-
 console.log('hi');
 
 var config = {
@@ -10,9 +8,9 @@ var config = {
     projectId: "classdemo-105ab",
     storageBucket: "classdemo-105ab.appspot.com",
     messagingSenderId: "714722563132"
-  };
+};
 
- firebase.initializeApp(config);
+firebase.initializeApp(config);
 
 var database = firebase.database();
 var newTrain;
@@ -22,10 +20,9 @@ var newFrequency;
 var today = 341;
 
 $(document).ready(function(){
-
-
-
 	$("#submit-button").on('click', function(event) {
+		event.preventDefault();
+		$("tbody").empty();
 		newTrain = $("#trainName").val().trim();
 		newDestination = $("#destination").val().trim();
 		newTrainTime = $("#firstTrainTime").val();	
@@ -41,7 +38,6 @@ $(document).ready(function(){
  
 var sendToDB = function(){
 	newTrainData = {
-	
 		name: newTrain,
 		destination: newDestination,
 		startTime: newTrainTime,
@@ -49,40 +45,12 @@ var sendToDB = function(){
 	};
 	database.ref().push(newTrainData);
 }
-
 database.ref().on("value", function(snapshot, prevChildKey){
-	
-for (var i in snapshot.val()){
- 		//console.log(snapshot.val()[i].length);
-// 		//var newTD = $("<td>");
- 		
- 		//console.log(newTrainName)
-//   		
-//   		var newTrainStart = snapshot.val().startTime;
-//   		var newTrainFrequency = snapshot.val().frequency;
-		console.log(i)
-
-// 		//newTD.text(snapshot.val()[i].name);
-// 		//newTDA.text(snapshot.val()[i].destination);
+		for (var i in snapshot.val()){
 		var newTrainName = snapshot.val()[i].name;
 		var newTrainDestination = snapshot.val()[i].destination;
 		var newTrainStart = snapshot.val()[i].startTime;
 		var newTrainFrequency = snapshot.val()[i].frequency;
- 															//console.log(snapshot.val()[i].destination);  THIS WORKS!!!!!!!!!!!!!!!!!!
- 		console.log(newTrainDestination)
- 		console.log(newTrainName)
-// 		console.log(newTrainDestination);
-// 		console.log(newTrainStart);
-// 		console.log(newTrainFrequency);
-$("tbody").append("<tr><td>" + newTrainName + "</td><td>" + newTrainDestination + "</td><td>" + newTrainStart + "</td><td>" + newTrainFrequency + "</td></tr>"); 
-// 		//var newTR = $("<tr>");
- 	//}	
-		//newTR.append(newTD);
-		//newTRA.append(newTDA)
-		
-		//$("tbody").append(newTRA);
-
-		}
-
-
-	});
+		$("tbody").append("<tr><td>" + newTrainName + "</td><td>" + newTrainDestination + "</td><td>" + newTrainStart + "</td><td>" + newTrainFrequency + "</td></tr>"); 
+	}
+});
