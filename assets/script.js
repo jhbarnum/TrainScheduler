@@ -18,8 +18,26 @@ var newDestination;
 var newTrainTime;
 var newFrequency;
 var today = 341;
+var mathTrainTime;
+var currentTime = moment().format('MMMM Do YYYY, h:mm:ss a');
+
+
+var trainStart;
+var difference;
+var timeRemaining;
+var minutesTillTrain;
+var newTrainArrival;
+var newTrainArrivalFormatted;
 
 $(document).ready(function(){
+	//$("#currentTime").append(currentTime);
+	function update() {
+		$('#currentTime').html(moment().format('MMMM Do YYYY, h:mm:ss a'));
+	}
+	setInterval(update, 1000);
+
+	
+
 	$("#submit-button").on('click', function(event) {
 		event.preventDefault();
 		$("tbody").empty();
@@ -51,6 +69,20 @@ database.ref().on("value", function(snapshot, prevChildKey){
 		var newTrainDestination = snapshot.val()[i].destination;
 		var newTrainStart = snapshot.val()[i].startTime;
 		var newTrainFrequency = snapshot.val()[i].frequency;
-		$("tbody").append("<tr><td>" + newTrainName + "</td><td>" + newTrainDestination + "</td><td>" + newTrainStart + "</td><td>" + newTrainFrequency + "</td></tr>"); 
+		  trainStart = moment(newTrainStart, "hh:mm").subtract(1, "years");
+          difference = moment().diff(moment(trainStart), "minutes");
+          timeRemaining = difference % newTrainFrequency;
+          minutesTillTrain = newTrainFrequency - timeRemaining;
+          newTrainArrival = moment().add(minutesTillTrain, "minutes");
+          newTrainArrivalFormatted = moment(newTrainArrival).format("hh:mm");
+//console.log(nextTrainFormatted);
+$("tbody").append("<tr><td>" + newTrainName + "</td><td>" + newTrainDestination + "</td><td>" + newTrainFrequency + "</td><td>" + newTrainArrivalFormatted + "</td><td>"+ minutesTillTrain + "</td></tr>");	
+//console.log(nextTrain);
+
+//console.log(tRemainder);
 	}
+
+
+	//findNextTrain();
 });
+
